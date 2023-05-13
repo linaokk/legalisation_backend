@@ -3,8 +3,12 @@ package com.pfa.services;
 import com.pfa.dtos.LoginDTO;
 import com.pfa.dtos.SignupDTO;
 import com.pfa.entities.*;
+import com.pfa.exceptions.UserNotFoundException;
+import com.pfa.exceptions.UsernameAlreadyTakenException;
 import com.pfa.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,40 +20,27 @@ public class UserService {
     private final ClientRepository clientRepository;
 
 
-    public boolean checkLoginAvailability(String login ){
-
-        return clientRepository.findByLogin(login).isPresent();
+    public boolean checkLoginAvailability(String login) {
+        return !clientRepository.findByLogin(login).isPresent();
     }
 
 
-    public Client signup(SignupDTO signupDTO) {
-        Client user = new Client(
-                signupDTO.getPassword(),
-                PieceDidentiteEnum.valueOf(signupDTO.getPieceDidentite()),
-                signupDTO.getNumIdentite(),
-                signupDTO.getPrenom(),
-                signupDTO.getNom(),
-                SexeEnum.valueOf(signupDTO.getSexe()),
-                signupDTO.getDateNaissance(),
-                NationaliteEnum.valueOf(signupDTO.getNationalite()),
-                SituationFamilialeEnum.valueOf(signupDTO.getSituationFam()),
-                signupDTO.getEmail(),
-                signupDTO.getNumTele(),
-                signupDTO.getAdresseResidence(),
-                signupDTO.getNomPere(),
-                signupDTO.getNomMere(),
-                false
-        ) ;
+    public ClientEntity signup(SignupDTO signupDTO) throws UsernameAlreadyTakenException {
+        boolean loginAvailability = this.checkLoginAvailability(signupDTO.getNumIdentite());
+        if (!loginAvailability) {
+            throw new UsernameAlreadyTakenException();
+        }
 
-       return clientRepository.save(user);
+        ClientEntity clientEntity = ClientEntity.from(signupDTO);
+        return clientRepository.save(clientEntity);
 
     }
 
 
-    public Client login(LoginDTO loginDTO) {
-        Optional<Client> optClient =this.clientRepository.findByNumeroIdentiteAndPassword(loginDTO.getNumeroDidentite(),loginDTO.getPassword());
-        Client client = optClient.orElseThrow(() -> new RuntimeException("le client nexiste pas"));
-        return client;
+    public ClientEntity login(LoginDTO loginDTO) throws UserNotFoundException {
+        Optional<ClientEntity> optClient = this.clientRepository.findByNumeroIdentiteAndPassword(loginDTO.getNumeroDidentite(), loginDTO.getPassword());
+        ClientEntity clientEntity = optClient.orElseThrow(() -> new RuntimeException("le client nexiste pas"));
+        return clientEntity;
     }
 
 
