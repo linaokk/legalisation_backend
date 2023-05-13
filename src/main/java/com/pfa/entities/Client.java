@@ -3,7 +3,7 @@ package com.pfa.entities;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 
@@ -15,6 +15,7 @@ import java.util.Date;
         @UniqueConstraint(columnNames = {"numeroIdentite"}))
 
 public class Client extends User {
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PieceDidentiteEnum pieceDidentite;
 
@@ -26,16 +27,16 @@ public class Client extends User {
 
     @Column(nullable = false)
     private String nom;
-
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SexeEnum sexe;
 
     @Column(nullable = false)
     private Date dateNaissance;
-
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private NationaliteEnum nationalite;
-
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SituationFamilialeEnum situationFamilialeEnum;
 
@@ -60,12 +61,24 @@ public class Client extends User {
     private boolean c_active;
 
 
-    public Client(String login, String password, String numeroIdentite, String prenom, String nom,
-                  SexeEnum sexe, Date dateNaissance, NationaliteEnum nationalite,
-                  SituationFamilialeEnum situationFamilialeEnum, String email, PieceDidentiteEnum pieceDidentite,
-                  String adresseDeResidence, String nomPere, String nomMere
-    ) {
-        super(login, password);
+    public Client(
+                  String password,
+                  PieceDidentiteEnum pieceDidentite,
+                  String numeroIdentite,
+                  String prenom,
+                  String nom,
+                  SexeEnum sexe,
+                  Date dateNaissance,
+                  NationaliteEnum nationalite,
+                  SituationFamilialeEnum situationFamilialeEnum,
+                  String email,
+                  String tele,
+                  String adresseDeResidence,
+                  String nomPere,
+                  String nomMere,
+                  boolean c_active) {
+        super(numeroIdentite, password);
+        this.pieceDidentite = pieceDidentite;
         this.numeroIdentite = numeroIdentite;
         this.prenom = prenom;
         this.nom = nom;
@@ -74,11 +87,10 @@ public class Client extends User {
         this.nationalite = nationalite;
         this.situationFamilialeEnum = situationFamilialeEnum;
         this.email = email;
-        this.pieceDidentite = pieceDidentite;
+        this.tele = tele;
         this.adresseDeResidence = adresseDeResidence;
         this.nomPere = nomPere;
         this.nomMere = nomMere;
-        this.c_active = false;
+        this.c_active = c_active;
     }
-
 }
