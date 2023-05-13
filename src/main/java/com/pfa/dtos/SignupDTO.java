@@ -1,16 +1,10 @@
 package com.pfa.dtos;
 
-import com.pfa.entities.NationaliteEnum;
-import com.pfa.entities.PieceDidentiteEnum;
-import com.pfa.entities.SexeEnum;
-import com.pfa.entities.SituationFamilialeEnum;
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.util.Date;
 
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignupDTO {
@@ -31,7 +25,7 @@ public class SignupDTO {
 
     private String nationalite;
 
-    private String  situationFam;
+    private String situationFam;
 
     private String email;
 

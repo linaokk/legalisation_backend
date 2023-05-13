@@ -1,17 +1,16 @@
 package com.pfa.entities;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import jakarta.persistence.*;
 
 
 @Data
-@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,13 +18,6 @@ public abstract class User {
     private String login;
     @Column(nullable = false)
     private String password;
-
-
-    public User(String login, String password) {
-        this.login = login;
-        this.password = password;
-
-    }
 
 }
 
