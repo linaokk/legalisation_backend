@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public class UserNotFoundException extends AbstractException {
 
-    public UserNotFoundException(){
+    public UserNotFoundException() {
         super("FT0002: The client doesnt exist");
     }
 

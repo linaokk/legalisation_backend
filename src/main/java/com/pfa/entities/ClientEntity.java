@@ -1,10 +1,10 @@
 package com.pfa.entities;
 
 import com.pfa.dtos.SignupDTO;
-import lombok.*;
-
 import jakarta.persistence.*;
-import lombok.experimental.SuperBuilder;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 

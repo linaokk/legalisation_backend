@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ClientRepository extends JpaRepository <ClientEntity,Long>{
+public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
     Optional<ClientEntity> findByLogin(String login);
 
     Optional<ClientEntity> findByNumeroIdentiteAndPassword(String numeroDidentite, String password);

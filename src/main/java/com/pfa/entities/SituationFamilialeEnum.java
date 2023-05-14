@@ -1,7 +1,7 @@
 package com.pfa.entities;
 
-public enum  SituationFamilialeEnum {
-    VEUF ,
+public enum SituationFamilialeEnum {
+    VEUF,
     CELEBATAIRE,
     MARIE,
     DIVIRCE;

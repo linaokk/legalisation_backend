@@ -2,13 +2,11 @@ package com.pfa.services;
 
 import com.pfa.dtos.LoginDTO;
 import com.pfa.dtos.SignupDTO;
-import com.pfa.entities.*;
+import com.pfa.entities.ClientEntity;
 import com.pfa.exceptions.UserNotFoundException;
 import com.pfa.exceptions.UsernameAlreadyTakenException;
 import com.pfa.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -38,7 +36,7 @@ public class UserService {
 
 
     public ClientEntity login(LoginDTO loginDTO) throws UserNotFoundException {
-        Optional<ClientEntity> optClient = this.clientRepository.findByNumeroIdentiteAndPassword(loginDTO.getNumeroDidentite(), loginDTO.getPassword());
+        Optional<ClientEntity> optClient = this.clientRepository.findByNumeroIdentiteAndPassword(loginDTO.getLogin(), loginDTO.getPassword());
         ClientEntity clientEntity = optClient.orElseThrow(() -> new RuntimeException("le client nexiste pas"));
         return clientEntity;
     }
