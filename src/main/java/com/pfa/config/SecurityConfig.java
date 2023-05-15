@@ -8,8 +8,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,14 +22,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class SecurityConfig implements WebMvcConfigurer {
+public class SecurityConfig {
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedMethods("*");
+    @Bean
+    public Customizer<CorsConfigurer<HttpSecurity>> corsConfigurerCustomizer() {
+        return httpSecurityCorsConfigurer -> new CorsRegistry()
+                .addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("*");
+
     }
 
     @Bean
@@ -36,9 +41,10 @@ public class SecurityConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    SecurityFilterChain springWebFilterChain(HttpSecurity http, JwtTokenProvider tokenProvider) throws Exception {
+    SecurityFilterChain springWebFilterChain(HttpSecurity http, JwtTokenProvider tokenProvider, Customizer<CorsConfigurer<HttpSecurity>> corsConfigurerCustomizer) throws Exception {
         return http
                 .httpBasic(AbstractHttpConfigurer::disable)
+                .cors(corsConfigurerCustomizer)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(c -> c.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
@@ -61,8 +67,8 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     AuthenticationManager customAuthenticationManager(UserDetailsService userDetailsService, PasswordEncoder encoder) {
         return authentication -> {
-            String username = authentication.getPrincipal() + "";
-            String password = authentication.getCredentials() + "";
+            String username = authentication.getPrincipal().toString();
+            String password = authentication.getCredentials().toString();
 
             UserDetails user = userDetailsService.loadUserByUsername(username);
 
