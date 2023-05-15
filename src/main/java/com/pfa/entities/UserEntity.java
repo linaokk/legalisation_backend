@@ -24,7 +24,7 @@ public class UserEntity implements UserDetails {
     private String login;
     @Column(nullable = false)
     private String password;
-
+    @Setter
     @Column(nullable = false, name = "client_active")
     private boolean c_active;
 
