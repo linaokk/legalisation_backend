@@ -6,6 +6,7 @@ import com.pfa.config.JwtTokenProvider;
 import com.pfa.dtos.LoginDTO;
 import com.pfa.dtos.SignupDTO;
 import com.pfa.entities.ClientEntity;
+import com.pfa.exceptions.UserNotFoundException;
 import com.pfa.exceptions.UsernameAlreadyTakenException;
 import com.pfa.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class AuthenticationController implements AuthenticationApi {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public ResponseEntity generateToken(LoginDTO data) {
+    public ResponseEntity generateToken(LoginDTO data) throws UserNotFoundException {
         try {
             String login = data.getLogin();
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

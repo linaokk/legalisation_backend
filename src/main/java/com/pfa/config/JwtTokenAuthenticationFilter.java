@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -34,7 +35,7 @@ public class JwtTokenAuthenticationFilter extends GenericFilterBean {
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication auth = jwtTokenProvider.getAuthentication(token);
 
-            if (auth != null && !(auth instanceof AnonymousAuthenticationToken)) {
+            if (Objects.nonNull(auth) && !(auth instanceof AnonymousAuthenticationToken)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
                 context.setAuthentication(auth);
                 SecurityContextHolder.setContext(context);
