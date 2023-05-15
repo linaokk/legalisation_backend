@@ -2,9 +2,11 @@ package com.pfa.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.sql.Blob;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -22,6 +24,14 @@ public class UserEntity implements UserDetails {
     private String login;
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false, name = "client_active")
+    private boolean c_active;
+
+    @Lob
+    @Setter
+    @Column(name = "user_picture")
+    private String userPicture;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -58,7 +68,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.c_active;
     }
 }
 

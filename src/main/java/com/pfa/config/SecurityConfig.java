@@ -24,6 +24,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class SecurityConfig implements WebMvcConfigurer {
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**").allowedMethods("*");
@@ -43,6 +44,7 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .exceptionHandling(c -> c.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/auth/register").permitAll()
                         .requestMatchers("/auth/check_availability").permitAll()
                         .anyRequest().authenticated()
                 )
