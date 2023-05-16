@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 
 
@@ -62,12 +64,12 @@ public class ClientEntity extends UserEntity {
 
 
     public ClientEntity() {
-        super(null, null, null, false, null);
+        super(null, null, null, false, null, null);
     }
 
     @Builder
-    public ClientEntity(Long id, String login, String password, PieceDidentiteEnum pieceDidentite, String numeroIdentite, String prenom, String nom, SexeEnum sexe, Date dateNaissance, NationaliteEnum nationalite, SituationFamilialeEnum situationFamilialeEnum, String email, String tele, String adresseDeResidence, String nomPere, String nomMere, boolean c_active, String userPicture) {
-        super(id, login, password, c_active, userPicture);
+    public ClientEntity(Long id, String login, String password, PieceDidentiteEnum pieceDidentite, String numeroIdentite, String prenom, String nom, SexeEnum sexe, Date dateNaissance, NationaliteEnum nationalite, SituationFamilialeEnum situationFamilialeEnum, String email, String tele, String adresseDeResidence, String nomPere, String nomMere, boolean c_active, String userPicture, Collection<RoleEnum> roleEnums) {
+        super(id, login, password, c_active, roleEnums, userPicture);
         this.pieceDidentite = pieceDidentite;
         this.numeroIdentite = numeroIdentite;
         this.prenom = prenom;
@@ -86,21 +88,23 @@ public class ClientEntity extends UserEntity {
     public static ClientEntity from(SignupDTO signupDTO, PasswordEncoder passwordEncoder) {
         return ClientEntity.builder()
                 .id(null)
-                .login(signupDTO.getNumIdentite())
+                .login(signupDTO.getIdentityCode())
                 .password(passwordEncoder.encode(signupDTO.getPassword()))
-                .pieceDidentite(PieceDidentiteEnum.valueOf(signupDTO.getPieceDidentite()))
-                .numeroIdentite(signupDTO.getNumIdentite())
-                .prenom(signupDTO.getPrenom())
-                .nom(signupDTO.getNom())
+                .pieceDidentite(PieceDidentiteEnum.valueOf(signupDTO.getIdentityType()))
+                .numeroIdentite(signupDTO.getIdentityCode())
+                .prenom(signupDTO.getFirstname())
+                .nom(signupDTO.getLastname())
                 .sexe(SexeEnum.valueOf(signupDTO.getSexe()))
-                .dateNaissance(signupDTO.getDateNaissance())
-                .nationalite(NationaliteEnum.valueOf(signupDTO.getNationalite()))
-                .situationFamilialeEnum(SituationFamilialeEnum.valueOf(signupDTO.getSituationFam()))
+                .dateNaissance(signupDTO.getBirthday())
+                .nationalite(NationaliteEnum.valueOf(signupDTO.getNationality()))
+                .situationFamilialeEnum(SituationFamilialeEnum.valueOf(signupDTO.getFamilySituation()))
                 .email(signupDTO.getEmail())
-                .tele(signupDTO.getNumTele())
-                .adresseDeResidence(signupDTO.getAdresseResidence())
-                .nomPere(signupDTO.getNomPere())
-                .nomMere(signupDTO.getNomMere())
+                .tele(signupDTO.getPhoneNumber())
+                .adresseDeResidence(signupDTO.getAddress())
+                .nomPere(signupDTO.getFatherName())
+                .nomMere(signupDTO.getMotherName())
+                .c_active(Boolean.FALSE)
+                .roleEnums(Arrays.asList(RoleEnum.ROLE_USER))
                 .build();
     }
 }

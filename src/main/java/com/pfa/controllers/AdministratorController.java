@@ -20,7 +20,7 @@ public class AdministratorController implements AdministratorApi {
     private final AdminService adminService;
 
     @Override
-    public ResponseEntity<?> fetchUser() {
+    public ResponseEntity<?> fetchUsers() {
         List<ClientEntity> clientEntities = adminService.fetchUsers();
         return ResponseEntity.ok(clientEntities);
     }
@@ -43,5 +43,11 @@ public class AdministratorController implements AdministratorApi {
         } catch (UserNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @Override
+    public ResponseEntity<?> fetchDisabledClients() {
+        List<ClientEntity> clientEntities = this.adminService.fetchDisabledClients();
+        return ResponseEntity.ok(clientEntities);
     }
 }

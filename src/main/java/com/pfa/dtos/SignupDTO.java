@@ -11,32 +11,32 @@ import java.util.Date;
 @AllArgsConstructor
 public class SignupDTO {
 
-
     private String password;
-    private String pieceDidentite;
 
-    private String numIdentite;
+    private String identityType;
 
-    private String prenom;
+    private String identityCode;
 
-    private String nom;
+    private String firstname;
+
+    private String lastname;
 
     private String sexe;
 
-    private Date dateNaissance;
+    private Date birthday;
 
-    private String nationalite;
+    private String nationality;
 
-    private String situationFam;
+    private String familySituation;
 
     private String email;
 
-    private String numTele;
+    private String phoneNumber;
 
-    private String adresseResidence;
+    private String address;
 
-    private String nomPere;
+    private String fatherName;
 
-    private String nomMere;
+    private String motherName;
 
 }

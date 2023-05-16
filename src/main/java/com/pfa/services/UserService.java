@@ -25,7 +25,7 @@ public class UserService {
 
 
     public ClientEntity signup(SignupDTO signupDTO) throws UsernameAlreadyTakenException {
-        boolean loginAvailability = this.checkLoginAvailability(signupDTO.getNumIdentite());
+        boolean loginAvailability = this.checkLoginAvailability(signupDTO.getIdentityCode());
         if (!loginAvailability) {
             throw new UsernameAlreadyTakenException();
         }
