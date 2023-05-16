@@ -28,6 +28,12 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false, name = "client_active")
     private boolean c_active;
 
+    @ElementCollection(targetClass = RoleEnum.class)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "role_id"))
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    Collection<RoleEnum> roles;
+
     @Lob
     @Setter
     @Column(name = "user_picture")
@@ -35,9 +41,9 @@ public class UserEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList("ROLE_USER")
+        return this.roles
                 .stream()
-                .map(role -> (GrantedAuthority) () -> role)
+                .map(role -> (GrantedAuthority) role::name)
                 .collect(Collectors.toList());
     }
 
