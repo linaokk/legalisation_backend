@@ -1,6 +1,7 @@
 package com.pfa.controllers;
 
 import com.pfa.api.AdministratorApi;
+import com.pfa.dtos.ClientDTO;
 import com.pfa.entities.ClientEntity;
 import com.pfa.exceptions.UserNotFoundException;
 import com.pfa.services.AdminService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -47,7 +49,10 @@ public class AdministratorController implements AdministratorApi {
 
     @Override
     public ResponseEntity<?> fetchDisabledClients() {
-        List<ClientEntity> clientEntities = this.adminService.fetchDisabledClients();
-        return ResponseEntity.ok(clientEntities);
+        List<ClientDTO> clientDtos = this.adminService.fetchDisabledClients()
+                .stream()
+                .map(ClientDTO::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(clientDtos);
     }
 }
