@@ -2,13 +2,13 @@ package com.pfa.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.sql.Blob;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -16,17 +16,23 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
+@Getter
+@Setter
 public class UserEntity implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String login;
+
     @Column(nullable = false)
     private String password;
+
     @Setter
     @Column(nullable = false, name = "client_active")
-    private boolean c_active;
+    private boolean active;
 
     @ElementCollection(targetClass = RoleEnum.class)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "role_id"))
@@ -34,10 +40,23 @@ public class UserEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     Collection<RoleEnum> roles;
 
-    @Lob
-    @Setter
-    @Column(name = "user_picture")
+
+    @Column(name = "user_picture", length = Integer.MAX_VALUE)
     private String userPicture;
+
+
+    @Column(name = "signature", length = Integer.MAX_VALUE)
+    private String signature;
+
+    @OneToMany(mappedBy="userEntity")
+    private List<RequestEntity> requestEntities;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private IdentityTypeEnum identityType;
+
+    @Column(name= "identity_code")
+    private String identityCode;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -74,7 +93,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.c_active;
+        return this.active;
     }
 }
 

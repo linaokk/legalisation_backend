@@ -10,10 +10,10 @@ import java.util.Optional;
 
 @Repository
 public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
+
     Optional<ClientEntity> findByLogin(String login);
 
-    Optional<ClientEntity> findByNumeroIdentiteAndPassword(String numeroDidentite, String password);
-
-    @Query("FROM ClientEntity ce where ce.c_active <> true")
+    @Query("FROM ClientEntity ce where ce.active <> true")
     List<ClientEntity> fetchDisabledClients();
+
 }

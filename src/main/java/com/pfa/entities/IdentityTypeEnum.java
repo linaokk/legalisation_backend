@@ -1,6 +1,6 @@
 package com.pfa.entities;
 
-public enum PieceDidentiteEnum {
+public enum IdentityTypeEnum {
     CIN,
     PASSEPORT;
 }

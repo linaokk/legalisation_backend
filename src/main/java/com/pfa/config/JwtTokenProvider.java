@@ -1,5 +1,6 @@
 package com.pfa.config;
 
+import com.pfa.entities.UserEntity;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -43,7 +44,15 @@ public class JwtTokenProvider {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Claims claims = Jwts.claims().setSubject(username);
         if (!authorities.isEmpty()) {
-            claims.put(AUTHORITIES_KEY, authorities.stream().map(GrantedAuthority::getAuthority).collect(joining(",")));
+            String roles = authorities.stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(joining(","));
+            UserEntity userEntity= (UserEntity) authentication.getPrincipal();
+
+            claims.put(AUTHORITIES_KEY, roles);
+            claims.put("identityCode", userEntity.getIdentityCode());
+            claims.put("identityType", userEntity.getIdentityType());
+            claims.put("login", userEntity.getLogin());
         }
 
         Date now = new Date();

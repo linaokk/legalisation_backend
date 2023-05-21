@@ -39,4 +39,8 @@ public class SignupDTO {
 
     private String motherName;
 
+    private String signature;
+
+    private String userPicture;
+
 }

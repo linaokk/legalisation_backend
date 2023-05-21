@@ -24,13 +24,13 @@ public class AdminService {
 
     public void enableClient(String login) throws UserNotFoundException {
         ClientEntity clientEntity = clientRepository.findByLogin(login).orElseThrow(() -> new UserNotFoundException());
-        clientEntity.setC_active(true);
+        clientEntity.setActive(true);
         clientRepository.save(clientEntity);
     }
 
     public void disableClient(String login) throws UserNotFoundException {
         ClientEntity clientEntity = clientRepository.findByLogin(login).orElseThrow(() -> new UserNotFoundException());
-        clientEntity.setC_active(false);
+        clientEntity.setActive(false);
         clientRepository.save(clientEntity);
     }
 
