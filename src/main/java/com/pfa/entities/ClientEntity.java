@@ -10,79 +10,69 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 
 @Getter
 @Setter
 @Entity
-@Table(name = "clients",
-        uniqueConstraints =
-        @UniqueConstraint(columnNames = {"numeroIdentite"}))
+@Table(name = "clients")
 public class ClientEntity extends UserEntity {
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PieceDidentiteEnum pieceDidentite;
+    @Column
+    private String firstname;
 
     @Column
-    private String numeroIdentite;
+    private String lastname;
 
-    @Column
-    private String prenom;
-
-    @Column
-    private String nom;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SexeEnum sexe;
 
-    @Column
-    private Date dateNaissance;
+    @Column(name="birth_day")
+    private Date birthday;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private NationaliteEnum nationalite;
+    private NationaliteEnum nationality;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private SituationFamilialeEnum situationFamilialeEnum;
+    private SituationFamilialeEnum familialSituationEnum;
 
     @Column
     private String email;
 
     @Column
-    private String tele;
+    private String phoneNumber;
 
     @Column
-    private String adresseDeResidence;
+    private String address;
 
     @Column
-    private String nomPere;
+    private String fatherName;
 
     @Column
-    private String nomMere;
-
+    private String motherName;
 
     public ClientEntity() {
-        super(null, null, null, false, null, null);
+        super(null, null, null, false, null, null, null, null, null, null);
     }
 
     @Builder
-    public ClientEntity(Long id, String login, String password, PieceDidentiteEnum pieceDidentite, String numeroIdentite, String prenom, String nom, SexeEnum sexe, Date dateNaissance, NationaliteEnum nationalite, SituationFamilialeEnum situationFamilialeEnum, String email, String tele, String adresseDeResidence, String nomPere, String nomMere, boolean c_active, String userPicture, Collection<RoleEnum> roleEnums) {
-        super(id, login, password, c_active, roleEnums, userPicture);
-        this.pieceDidentite = pieceDidentite;
-        this.numeroIdentite = numeroIdentite;
-        this.prenom = prenom;
-        this.nom = nom;
+    public ClientEntity(Long id, String login, String password, IdentityTypeEnum identityType, String identityCode, String firstname, String lastname, SexeEnum sexe, Date birthday, NationaliteEnum nationality, SituationFamilialeEnum familialSituationEnum, String email, String phoneNumber, String address, String fatherName, String motherName, boolean c_active, String userPicture, Collection<RoleEnum> roleEnums, String signature, List<RequestEntity> requestEntities) {
+        super(id, login, password, c_active, roleEnums, userPicture, signature, requestEntities, identityType, identityCode);
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.sexe = sexe;
-        this.dateNaissance = dateNaissance;
-        this.nationalite = nationalite;
-        this.situationFamilialeEnum = situationFamilialeEnum;
+        this.birthday = birthday;
+        this.nationality = nationality;
+        this.familialSituationEnum = familialSituationEnum;
         this.email = email;
-        this.tele = tele;
-        this.adresseDeResidence = adresseDeResidence;
-        this.nomPere = nomPere;
-        this.nomMere = nomMere;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.fatherName = fatherName;
+        this.motherName = motherName;
     }
 
     public static ClientEntity from(SignupDTO signupDTO, PasswordEncoder passwordEncoder) {
@@ -90,21 +80,23 @@ public class ClientEntity extends UserEntity {
                 .id(null)
                 .login(signupDTO.getIdentityCode())
                 .password(passwordEncoder.encode(signupDTO.getPassword()))
-                .pieceDidentite(PieceDidentiteEnum.valueOf(signupDTO.getIdentityType()))
-                .numeroIdentite(signupDTO.getIdentityCode())
-                .prenom(signupDTO.getFirstname())
-                .nom(signupDTO.getLastname())
+                .identityType(IdentityTypeEnum.valueOf(signupDTO.getIdentityType()))
+                .identityCode(signupDTO.getIdentityCode())
+                .firstname(signupDTO.getFirstname())
+                .lastname(signupDTO.getLastname())
                 .sexe(SexeEnum.valueOf(signupDTO.getSexe()))
-                .dateNaissance(signupDTO.getBirthday())
-                .nationalite(NationaliteEnum.valueOf(signupDTO.getNationality()))
-                .situationFamilialeEnum(SituationFamilialeEnum.valueOf(signupDTO.getFamilySituation()))
+                .birthday(signupDTO.getBirthday())
+                .nationality(NationaliteEnum.valueOf(signupDTO.getNationality()))
+                .familialSituationEnum(SituationFamilialeEnum.valueOf(signupDTO.getFamilySituation()))
                 .email(signupDTO.getEmail())
-                .tele(signupDTO.getPhoneNumber())
-                .adresseDeResidence(signupDTO.getAddress())
-                .nomPere(signupDTO.getFatherName())
-                .nomMere(signupDTO.getMotherName())
-                .c_active(Boolean.FALSE)
+                .phoneNumber(signupDTO.getPhoneNumber())
+                .address(signupDTO.getAddress())
+                .fatherName(signupDTO.getFatherName())
+                .motherName(signupDTO.getMotherName())
+                .c_active(Boolean.TRUE)
                 .roleEnums(Arrays.asList(RoleEnum.ROLE_USER))
+                .signature(signupDTO.getSignature())
+                .userPicture(signupDTO.getUserPicture())
                 .build();
     }
 }
