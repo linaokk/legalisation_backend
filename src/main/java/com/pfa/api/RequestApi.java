@@ -1,10 +1,12 @@
 package com.pfa.api;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @CrossOrigin("*")
 @RequestMapping("requests")
@@ -13,5 +15,8 @@ public interface RequestApi {
 
     @GetMapping("find")
     public ResponseEntity<?> find();
+
+    @PostMapping(path = "add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> add(@RequestParam("document") MultipartFile document, @RequestParam("description") String description, @RequestParam("documentType") String documentType) throws IOException;
 
 }

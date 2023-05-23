@@ -22,6 +22,8 @@ public class RequestDTO {
 
     private boolean validated;
 
+    private String description;
+
     private byte[] document;
 
     public static RequestDTO from(RequestEntity requestEntity) {
@@ -31,6 +33,7 @@ public class RequestDTO {
                 .insertedAt(requestEntity.getInsertedAt())
                 .validated(requestEntity.isValidated())
                 .document(requestEntity.getDocument())
+                .description(requestEntity.getDescription())
                 .build();
     }
 

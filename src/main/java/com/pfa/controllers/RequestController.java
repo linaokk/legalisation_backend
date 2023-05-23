@@ -12,8 +12,9 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.security.Principal;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,17 @@ public class RequestController implements RequestApi {
         List<RequestEntity> requestEntities = this.requestService.findAllByIdentityCode(identityCode);
         List<RequestDTO> requestDTOs = requestEntities.stream().map(RequestDTO::from).collect(Collectors.toList());
         return ResponseEntity.ok(requestDTOs);
+    }
+
+    @Override
+    public ResponseEntity<?> add(MultipartFile document, String description, String documentType) throws IOException {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        User principal = (User) authentication.getPrincipal();
+        String identityCode = principal.getUsername();
+
+        this.requestService.add(identityCode, document, description, documentType);
+        return ResponseEntity.noContent().build();
     }
 
 }
