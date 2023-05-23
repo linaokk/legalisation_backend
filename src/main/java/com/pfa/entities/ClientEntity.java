@@ -93,7 +93,7 @@ public class ClientEntity extends UserEntity {
                 .address(signupDTO.getAddress())
                 .fatherName(signupDTO.getFatherName())
                 .motherName(signupDTO.getMotherName())
-                .c_active(Boolean.TRUE)
+                .c_active(Boolean.FALSE)
                 .roleEnums(Arrays.asList(RoleEnum.ROLE_USER))
                 .signature(signupDTO.getSignature())
                 .userPicture(signupDTO.getUserPicture())
