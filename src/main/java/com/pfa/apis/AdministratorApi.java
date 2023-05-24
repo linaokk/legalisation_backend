@@ -1,4 +1,4 @@
-package com.pfa.api;
+package com.pfa.apis;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;

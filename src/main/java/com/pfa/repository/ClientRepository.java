@@ -13,6 +13,8 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Long> {
 
     Optional<ClientEntity> findByLogin(String login);
 
+    Optional<ClientEntity> findByIdentityCode(String identityCode);
+
     @Query("FROM ClientEntity ce where ce.active <> true")
     List<ClientEntity> fetchDisabledClients();
 
