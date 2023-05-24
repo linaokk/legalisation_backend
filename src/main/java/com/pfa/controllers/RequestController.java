@@ -1,9 +1,8 @@
 package com.pfa.controllers;
 
 
-import com.pfa.api.RequestApi;
+import com.pfa.apis.RequestApi;
 import com.pfa.dtos.RequestDTO;
-import com.pfa.dtos.RequestFormDTO;
 import com.pfa.entities.RequestEntity;
 import com.pfa.services.RequestService;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +14,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 

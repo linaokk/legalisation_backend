@@ -1,5 +1,6 @@
 package com.pfa.config;
 
+import com.pfa.exceptions.FeatureErrorEnum;
 import com.pfa.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,7 +62,7 @@ public class SecurityConfig {
     @Bean
     UserDetailsService customUserDetailsService(UserRepository userRepository) {
         return (username) -> userRepository.findByLogin(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found"));
+                .orElseThrow(() -> FeatureErrorEnum.FT0001.newException());
     }
 
     @Bean
@@ -73,11 +74,11 @@ public class SecurityConfig {
             UserDetails user = userDetailsService.loadUserByUsername(username);
 
             if (!encoder.matches(password, user.getPassword())) {
-                throw new BadCredentialsException("Bad credentials");
+                FeatureErrorEnum.FT0002.throwException();
             }
 
             if (!user.isEnabled()) {
-                throw new DisabledException("User account is not active");
+                FeatureErrorEnum.FT0004.throwException();
             }
 
             return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
