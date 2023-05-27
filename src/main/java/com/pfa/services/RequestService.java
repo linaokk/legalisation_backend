@@ -1,10 +1,9 @@
 package com.pfa.services;
 
-import com.pfa.entities.ClientEntity;
-import com.pfa.entities.RequestEntity;
-import com.pfa.entities.TypeDocumentEnum;
-import com.pfa.entities.UserEntity;
-import com.pfa.repository.ClientRepository;
+import com.pfa.entities.requests.RequestEntity;
+import com.pfa.entities.requests.RequestStatusEnum;
+import com.pfa.entities.users.enums.TypeDocumentEnum;
+import com.pfa.entities.users.UserEntity;
 import com.pfa.repository.RequestRepository;
 import com.pfa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -31,10 +31,11 @@ public class RequestService {
         UserEntity userEntity = this.userRepository.findByIdentityCode(identityCode)
                 .orElseThrow(() -> new RuntimeException("Client not found !"));
         byte[] byteArr = document.getResource().getContentAsByteArray();
+
         RequestEntity requestEntity = RequestEntity.builder()
                 .documentType(TypeDocumentEnum.valueOf(documentType))
-                .validated(Boolean.FALSE)
-                .insertedAt(new Date(System.currentTimeMillis()))
+                .status(RequestStatusEnum.INITIAL_REQUEST)
+                .insertedAt(LocalDateTime.now())
                 .description(description)
                 .document(byteArr)
                 .userEntity(userEntity)

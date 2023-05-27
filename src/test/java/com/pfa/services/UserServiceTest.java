@@ -1,20 +1,13 @@
 package com.pfa.services;
 
-import com.pfa.entities.ClientEntity;
-import com.pfa.repository.ClientRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class UserServiceTest {
@@ -36,7 +29,6 @@ class UserServiceTest {
         // given
         String login = "AE180937";
         Optional<ClientEntity> optClientEntity = Optional.of(ClientEntity.builder().build());
-
 
 
         // when

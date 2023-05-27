@@ -2,11 +2,11 @@ package com.pfa.controllers;
 
 
 import com.pfa.apis.AuthenticationApi;
-import com.pfa.dtos.ClientDTO;
 import com.pfa.dtos.LoginDTO;
 import com.pfa.dtos.RequestUpdateMyAccountDTO;
 import com.pfa.dtos.SignupDTO;
-import com.pfa.entities.ClientEntity;
+import com.pfa.dtos.UserDTO;
+import com.pfa.entities.users.UserEntity;
 import com.pfa.exceptions.UsernameAlreadyTakenException;
 import com.pfa.services.AuthenticationService;
 import com.pfa.services.UserService;
@@ -50,8 +50,8 @@ public class AuthenticationController implements AuthenticationApi {
     @Override
     public ResponseEntity<?> signup(SignupDTO signupDTO) {
         try {
-            ClientEntity clientEntity = this.userService.signup(signupDTO);
-            return ResponseEntity.status(HttpStatus.OK).body(clientEntity);
+            UserEntity userEntity = this.userService.signup(signupDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(userEntity);
         } catch (UsernameAlreadyTakenException ex) {
             return ResponseEntity.status(ex.getHttpCode()).body(ex.getMessage());
         } catch (Exception ex) {
@@ -81,8 +81,8 @@ public class AuthenticationController implements AuthenticationApi {
         User principal = (User) authentication.getPrincipal();
         String identityCode = principal.getUsername();
 
-        ClientEntity userEntity = this.authenticationService.findClientByIdentityCode(identityCode);
-        ClientDTO clientDTO = ClientDTO.from(userEntity);
+        UserEntity userEntity = this.authenticationService.findClientByIdentityCode(identityCode);
+        UserDTO clientDTO = UserDTO.from(userEntity);
         return ResponseEntity.ok(clientDTO);
     }
 

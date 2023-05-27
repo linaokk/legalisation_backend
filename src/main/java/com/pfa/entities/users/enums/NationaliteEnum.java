@@ -1,4 +1,4 @@
-package com.pfa.entities;
+package com.pfa.entities.users.enums;
 
 public enum NationaliteEnum {
 

@@ -6,10 +6,8 @@ import com.pfa.clients.dtos.FaceRecognitionCheckRequest;
 import com.pfa.clients.dtos.FaceRecognitionResult;
 import com.pfa.config.JwtTokenProvider;
 import com.pfa.dtos.LoginDTO;
-import com.pfa.entities.ClientEntity;
-import com.pfa.entities.UserEntity;
+import com.pfa.entities.users.UserEntity;
 import com.pfa.exceptions.FeatureErrorEnum;
-import com.pfa.repository.ClientRepository;
 import com.pfa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +27,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final FaceRecognitionClient recognitionClient;
-    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
 
     public Map<Object, Object> loginAndGenerateToken(LoginDTO data) {
         String login = data.getLogin();
@@ -42,12 +40,12 @@ public class AuthenticationService {
         String userPicture = userEntity.getUserPicture();
         String loggedInUserPicture = data.getUserPicture();
 
-        FaceRecognitionResult recognitionResult = recognitionClient.checkSameFace(
-                FaceRecognitionCheckRequest.from(userPicture, loggedInUserPicture)
-        );
-
-        if (!recognitionResult.isResult()) {
-            FeatureErrorEnum.FT0003.throwException();
+        if(userEntity.isNeedFaceCheck()){
+            FaceRecognitionCheckRequest faceCheckRequest = FaceRecognitionCheckRequest.from(userPicture, loggedInUserPicture);
+            FaceRecognitionResult recognitionResult = recognitionClient.checkSameFace(faceCheckRequest);
+            if (!recognitionResult.isResult()) {
+                FeatureErrorEnum.FT0003.throwException();
+            }
         }
 
         String token = jwtTokenProvider.createToken(authentication);
@@ -57,18 +55,18 @@ public class AuthenticationService {
         return model;
     }
 
-    public ClientEntity findClientByIdentityCode(String identityCode) {
-        return this.clientRepository.findByIdentityCode(identityCode)
+    public UserEntity findClientByIdentityCode(String identityCode) {
+        return this.userRepository.findByIdentityCode(identityCode)
                 .orElseThrow(() -> FeatureErrorEnum.FT0001.newException());
     }
 
     public void updateClientAccount(String identityCode, String phoneNumber, String password, String email) {
-        ClientEntity clientEntity = this.findClientByIdentityCode(identityCode);
+        UserEntity clientEntity = this.findClientByIdentityCode(identityCode);
 
         String encodedPassword = passwordEncoder.encode(password);
         clientEntity.setPhoneNumber(phoneNumber);
         clientEntity.setEmail(email);
         clientEntity.setPassword(encodedPassword);
-        this.clientRepository.save(clientEntity);
+        this.userRepository.save(clientEntity);
     }
 }

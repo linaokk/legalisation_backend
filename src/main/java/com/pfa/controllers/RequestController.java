@@ -3,7 +3,7 @@ package com.pfa.controllers;
 
 import com.pfa.apis.RequestApi;
 import com.pfa.dtos.RequestDTO;
-import com.pfa.entities.RequestEntity;
+import com.pfa.entities.requests.RequestEntity;
 import com.pfa.services.RequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

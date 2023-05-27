@@ -1,12 +1,14 @@
 package com.pfa.dtos;
 
-import com.pfa.entities.RequestEntity;
+import com.pfa.entities.requests.RequestEntity;
+import com.pfa.entities.requests.RequestStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -18,22 +20,25 @@ public class RequestDTO {
 
     private String documentType;
 
-    private Date insertedAt;
+    private LocalDateTime insertedAt;
 
-    private boolean validated;
+    private String status;
 
     private String description;
 
     private byte[] document;
+
+    private UserDTO user;
 
     public static RequestDTO from(RequestEntity requestEntity) {
         return RequestDTO.builder()
                 .id(requestEntity.getId())
                 .documentType(requestEntity.getDocumentType().name())
                 .insertedAt(requestEntity.getInsertedAt())
-                .validated(requestEntity.isValidated())
+                .status(requestEntity.getStatus().name())
                 .document(requestEntity.getDocument())
                 .description(requestEntity.getDescription())
+                .user(UserDTO.from(requestEntity.getUserEntity()))
                 .build();
     }
 
