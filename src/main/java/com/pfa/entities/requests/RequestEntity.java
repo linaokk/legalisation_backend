@@ -1,10 +1,12 @@
-package com.pfa.entities;
+package com.pfa.entities.requests;
 
+import com.pfa.entities.users.enums.TypeDocumentEnum;
+import com.pfa.entities.users.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "requests")
@@ -30,10 +32,12 @@ public class RequestEntity {
     private byte[] document;
 
     @Column(name= "inserted_at", nullable = false)
-    private Date insertedAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime insertedAt;
 
     @Column(nullable = false)
-    private boolean validated;
+    @Enumerated(EnumType.STRING)
+    private RequestStatusEnum status;
 
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)

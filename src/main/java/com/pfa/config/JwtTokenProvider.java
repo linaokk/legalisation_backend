@@ -1,6 +1,6 @@
 package com.pfa.config;
 
-import com.pfa.entities.UserEntity;
+import com.pfa.entities.users.UserEntity;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
