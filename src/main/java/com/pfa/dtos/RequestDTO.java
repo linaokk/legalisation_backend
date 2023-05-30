@@ -26,6 +26,8 @@ public class RequestDTO {
 
     private String description;
 
+    private String userPicture;
+
     private byte[] document;
 
     private UserDTO user;
@@ -38,6 +40,7 @@ public class RequestDTO {
                 .status(requestEntity.getStatus().name())
                 .document(requestEntity.getDocument())
                 .description(requestEntity.getDescription())
+                .userPicture(requestEntity.getUserPicture())
                 .user(UserDTO.from(requestEntity.getUserEntity()))
                 .build();
     }

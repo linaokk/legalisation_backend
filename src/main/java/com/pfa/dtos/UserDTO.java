@@ -25,6 +25,7 @@ public class UserDTO {
     private String identityCode;
     private String identityType;
     private String email;
+    private String userPicture;
     private boolean active;
     private List<String> authorities;
 
@@ -46,6 +47,7 @@ public class UserDTO {
                 .identityType(userEntity.getIdentityType().toString())
                 .active(userEntity.isEnabled())
                 .authorities(userAuthorities)
+                .userPicture(userEntity.getUserPicture())
                 .build();
     }
 

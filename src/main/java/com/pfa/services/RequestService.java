@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class RequestService {
         return this.requestRepository.findByIdentityCode(identityCode);
     }
 
-    public void add(String identityCode, MultipartFile document, String description, String documentType) throws IOException {
+    public void add(String identityCode, MultipartFile document, String description, String documentType, String userPicture) throws IOException {
         UserEntity userEntity = this.userRepository.findByIdentityCode(identityCode)
                 .orElseThrow(() -> new RuntimeException("Client not found !"));
         byte[] byteArr = document.getResource().getContentAsByteArray();
@@ -38,8 +37,10 @@ public class RequestService {
                 .insertedAt(LocalDateTime.now())
                 .description(description)
                 .document(byteArr)
+                .userPicture(userPicture)
                 .userEntity(userEntity)
                 .build();
+
         this.requestRepository.save(requestEntity);
     }
 }

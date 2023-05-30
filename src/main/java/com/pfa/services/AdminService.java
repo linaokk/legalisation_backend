@@ -51,6 +51,14 @@ public class AdminService {
         this.userRepository.save(administratorEntity);
     }
 
+    public void createDefaultSuperAdministrator() {
+        UserEntity administratorEntity = UserEntity.buildSuperAdministrator(passwordEncoded);
+        String username = administratorEntity.getUsername();
+        boolean exists = this.userRepository.findByLogin(username).isPresent();
+        if (exists) return;
+        this.userRepository.save(administratorEntity);
+    }
+
     public List<RequestEntity> fetchPendingRequests() {
         return this.requestRepository.findByStatus(RequestStatusEnum.INITIAL_REQUEST);
     }
