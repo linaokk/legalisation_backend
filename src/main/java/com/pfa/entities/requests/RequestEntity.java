@@ -31,6 +31,9 @@ public class RequestEntity {
     @Column(nullable = false)
     private byte[] document;
 
+    @Column(name="user_picture", nullable = false, length = Integer.MAX_VALUE)
+    private String userPicture;
+
     @Column(name= "inserted_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime insertedAt;

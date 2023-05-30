@@ -14,6 +14,7 @@ public class OnStartUpConfig {
     @PostConstruct
     public void postConstruct() {
         adminService.createDefaultAdministrator();
+        adminService.createDefaultSuperAdministrator();
     }
 
 }

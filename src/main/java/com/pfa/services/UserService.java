@@ -3,6 +3,7 @@ package com.pfa.services;
 import com.pfa.dtos.LoginDTO;
 import com.pfa.dtos.SignupDTO;
 import com.pfa.entities.users.UserEntity;
+import com.pfa.exceptions.FeatureErrorEnum;
 import com.pfa.exceptions.UserNotFoundException;
 import com.pfa.exceptions.UsernameAlreadyTakenException;
 import com.pfa.repository.UserRepository;
@@ -32,7 +33,6 @@ public class UserService {
 
         UserEntity clientEntity = UserEntity.from(signupDTO, passwordEncoder);
         return userRepository.save(clientEntity);
-
     }
 
 
