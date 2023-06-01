@@ -1,5 +1,6 @@
 package com.pfa.entities.users;
 
+import com.pfa.dtos.SignupAdminRequestDTO;
 import com.pfa.dtos.SignupDTO;
 import com.pfa.entities.requests.RequestEntity;
 import com.pfa.entities.users.enums.*;
@@ -205,6 +206,30 @@ public class UserEntity implements UserDetails {
                 .signature(signupDTO.getSignature())
                 .userPicture(signupDTO.getUserPicture())
                 .needFaceCheck(Boolean.FALSE)
+                .build();
+    }
+
+    public static UserEntity from(SignupAdminRequestDTO signupAdminRequestDTO, PasswordEncoder passwordEncoder, boolean needFaceCheck, RoleEnum ... roleEnums) {
+        return UserEntity.builder()
+                .id(null)
+                .login(signupAdminRequestDTO.getIdentityCode())
+                .password(passwordEncoder.encode(signupAdminRequestDTO.getPassword()))
+                .identityType(IdentityTypeEnum.valueOf(signupAdminRequestDTO.getIdentityType()))
+                .identityCode(signupAdminRequestDTO.getIdentityCode())
+                .firstname(signupAdminRequestDTO.getFirstname())
+                .lastname(signupAdminRequestDTO.getLastname())
+                .sexe(SexeEnum.valueOf(signupAdminRequestDTO.getSexe()))
+                .birthday(signupAdminRequestDTO.getBirthday())
+                .nationality(NationaliteEnum.valueOf(signupAdminRequestDTO.getNationality()))
+                .familialSituationEnum(SituationFamilialeEnum.valueOf(signupAdminRequestDTO.getFamilySituation()))
+                .email(signupAdminRequestDTO.getEmail())
+                .phoneNumber(signupAdminRequestDTO.getPhoneNumber())
+                .address(signupAdminRequestDTO.getAddress())
+                .fatherName(signupAdminRequestDTO.getFatherName())
+                .motherName(signupAdminRequestDTO.getMotherName())
+                .active(Boolean.FALSE)
+                .roles(Arrays.asList(roleEnums))
+                .needFaceCheck(needFaceCheck)
                 .build();
     }
 }

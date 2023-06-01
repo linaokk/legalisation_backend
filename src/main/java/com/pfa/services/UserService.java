@@ -3,6 +3,7 @@ package com.pfa.services;
 import com.pfa.dtos.LoginDTO;
 import com.pfa.dtos.SignupDTO;
 import com.pfa.entities.users.UserEntity;
+import com.pfa.entities.users.enums.RoleEnum;
 import com.pfa.exceptions.FeatureErrorEnum;
 import com.pfa.exceptions.UserNotFoundException;
 import com.pfa.exceptions.UsernameAlreadyTakenException;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
