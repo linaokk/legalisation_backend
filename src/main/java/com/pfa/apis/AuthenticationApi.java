@@ -1,8 +1,8 @@
-package com.pfa.api;
+package com.pfa.apis;
 
 import com.pfa.dtos.LoginDTO;
+import com.pfa.dtos.RequestUpdateMyAccountDTO;
 import com.pfa.dtos.SignupDTO;
-import com.pfa.exceptions.UserNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public interface AuthenticationApi {
 
     @PostMapping("login")
-    ResponseEntity generateToken(@RequestBody LoginDTO data) throws UserNotFoundException;
+    ResponseEntity generateToken(@RequestBody LoginDTO data);
 
     @GetMapping("check_availability")
     ResponseEntity<Boolean> checkLoginAvailability(@RequestParam String login);
@@ -22,4 +22,10 @@ public interface AuthenticationApi {
 
     @GetMapping("get_user_info")
     ResponseEntity<?> getUserInfo();
+
+    @GetMapping("get_my_account")
+    ResponseEntity<?> getMyAccount();
+
+    @PutMapping("update_my_account")
+    ResponseEntity<?> updateMyAccount(@RequestBody RequestUpdateMyAccountDTO requestUpdateMyAccountDTO);
 }

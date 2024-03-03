@@ -1,29 +1,26 @@
 package com.pfa.controllers;
 
 
-import com.pfa.api.AuthenticationApi;
-import com.pfa.config.JwtTokenProvider;
+import com.pfa.apis.AuthenticationApi;
 import com.pfa.dtos.LoginDTO;
+import com.pfa.dtos.RequestUpdateMyAccountDTO;
 import com.pfa.dtos.SignupDTO;
-import com.pfa.entities.ClientEntity;
-import com.pfa.exceptions.UserNotFoundException;
+import com.pfa.dtos.UserDTO;
+import com.pfa.entities.users.UserEntity;
 import com.pfa.exceptions.UsernameAlreadyTakenException;
+import com.pfa.services.AuthenticationService;
 import com.pfa.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -31,27 +28,18 @@ import java.util.Map;
 public class AuthenticationController implements AuthenticationApi {
 
     private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationService authenticationService;
 
     @Override
-    public ResponseEntity generateToken(LoginDTO data) throws UserNotFoundException {
+    public ResponseEntity generateToken(LoginDTO data) {
         try {
-            String login = data.getLogin();
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    login,
-                    data.getPassword()
-            );
-            Authentication authentication = authenticationManager.authenticate(authToken);
-            String token = jwtTokenProvider.createToken(authentication);
-            Map<Object, Object> model = new HashMap<>();
-            model.put("username", login);
-            model.put("token", token);
+            Map<Object, Object> model = this.authenticationService.loginAndGenerateToken(data);
             return ResponseEntity.ok(model);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username/password supplied");
         }
     }
+
 
     @Override
     public ResponseEntity<Boolean> checkLoginAvailability(String login) {
@@ -62,8 +50,8 @@ public class AuthenticationController implements AuthenticationApi {
     @Override
     public ResponseEntity<?> signup(SignupDTO signupDTO) {
         try {
-            ClientEntity clientEntity = this.userService.signup(signupDTO);
-            return ResponseEntity.status(HttpStatus.OK).body(clientEntity);
+            UserEntity userEntity = this.userService.signup(signupDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(userEntity);
         } catch (UsernameAlreadyTakenException ex) {
             return ResponseEntity.status(ex.getHttpCode()).body(ex.getMessage());
         } catch (Exception ex) {
@@ -84,6 +72,35 @@ public class AuthenticationController implements AuthenticationApi {
                 "authorities", authentication.getAuthorities()
         );
         return ResponseEntity.ok(userInfo);
+    }
+
+    @Override
+    public ResponseEntity<?> getMyAccount() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        User principal = (User) authentication.getPrincipal();
+        String identityCode = principal.getUsername();
+
+        UserEntity userEntity = this.authenticationService.findClientByIdentityCode(identityCode);
+        UserDTO clientDTO = UserDTO.from(userEntity);
+        return ResponseEntity.ok(clientDTO);
+    }
+
+    @Override
+    public ResponseEntity<?> updateMyAccount(RequestUpdateMyAccountDTO requestUpdateMyAccountDTO) {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        User principal = (User) authentication.getPrincipal();
+        String identityCode = principal.getUsername();
+
+        this.authenticationService.updateClientAccount(
+                identityCode,
+                requestUpdateMyAccountDTO.getPhoneNumber(),
+                requestUpdateMyAccountDTO.getPassword(),
+                requestUpdateMyAccountDTO.getEmail()
+        );
+
+        return ResponseEntity.noContent().build();
     }
 
 

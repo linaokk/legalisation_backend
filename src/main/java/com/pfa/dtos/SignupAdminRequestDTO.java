@@ -9,7 +9,7 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignupDTO {
+public class SignupAdminRequestDTO {
 
     private String password;
 
@@ -38,9 +38,5 @@ public class SignupDTO {
     private String fatherName;
 
     private String motherName;
-
-    private String signature;
-
-    private String userPicture;
 
 }
